@@ -1,4 +1,5 @@
 const gm = require('gm').subClass({imageMagick: true});
+const os = require('os');
 
 
 
@@ -9,24 +10,27 @@ const gm = require('gm').subClass({imageMagick: true});
  * name {string} - the name to write in the certificate
  * top {int} - distance in px from the top to write the name
  */
-function writeNameToCert(sourceImagePath, name, coor, callback) {
-    const fname = generateFilename();
-    gm(sourceImagePath).fontSize(110).
-        drawText(coor.x, coor.y, name, 'Center').
-        write(fname, (err) => {
-            callback(fname);
-        });
+function writeNameToCert(sourceImagePath, name, coor) {
+    const fname = generateFilename(name);
+    return new Promise(function(resolve, reject) {
+        gm(sourceImagePath).fontSize(110).font('./Roboto-Regular.ttf').
+            drawText(coor.x, coor.y, name, 'Center').
+            write(fname, (err) => {
+                if (err) {
+                    console.log(err);
+                    reject(err)
+                } else {
+                    resolve(fname);
+                }
+            });
+    });
 }
 
-function generateFilename() {
+function generateFilename(name) {
+    name = name.replace(/\s/g, "");
     var filename = (Math.floor(Math.random() * 100000000) + 1).toString(16);
-    return filename + '.jpg';
+    return `${os.tmpdir()}/${name}${filename}.jpg`;
 }
 
 
-// export default writeNameToCert;
-function test(callback) {
-    writeNameToCert('cert.jpg', 'Emmanuel Lodovice', {x: 0, y: -50}, callback)
-}
-
-exports.test = test;
+exports.writeNameToCert = writeNameToCert;
