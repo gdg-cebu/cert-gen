@@ -11,15 +11,36 @@ admin.initializeApp({
 
 
 exports.generateCert = functions.https.onRequest((request, response) => {
-    generateImage.writeNameToCert('cert.jpg', 'Emmanuel Lodovice', {x: 0, y: -50}).then((fname) => {
-        uploadImage(fname).then((url) => {
-            response.send(url);
-        }).catch((err) => {
-            response.send(err);
-        });
-    }).catch((err) => {
-        response.send(err);
-    });
+    const id = request.query.id;
+    const docRef = admin.firestore().collection('participants-io').doc(id)
+    docRef.get().then(doc => {
+        if (!doc.exists) {
+            response.status(404).send('does not exists!');
+        }
+        let data = doc.data();
+        if (data.imageUrl) {
+            response.set({
+              'Content-Type': 'text/plain',
+              'Access-Control-Allow-Origin': '*'
+            }).send(data.imageUrl);
+        } else {
+            generateImage.writeNameToCert('cert.jpg', data.name, {x: 0, y: -50}).then((fname) => {
+                uploadImage(fname).then((url) => {
+                    data.imageUrl = url;
+                    doc.ref.set(data);
+                    response.set({
+                      'Content-Type': 'text/plain',
+                      'Access-Control-Allow-Origin': '*'
+                    }).send(url);
+                }).catch((err) => {
+                    response.status(400).send(err);
+                });
+            }).catch((err) => {
+                response.status(400).send(err);
+            });
+        }
+    })
+
 });
 
 function uploadImage(fname) {
