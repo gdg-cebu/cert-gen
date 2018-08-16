@@ -17,8 +17,7 @@ function writeNameToCert(sourceImagePath, name, coor) {
             drawText(coor.x, coor.y, name, 'Center').
             write(fname, (err) => {
                 if (err) {
-                    console.log(err);
-                    reject(err)
+                    reject(err);
                 } else {
                     resolve(fname);
                 }
