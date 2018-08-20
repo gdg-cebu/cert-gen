@@ -1,5 +1,6 @@
 const gm = require('gm').subClass({imageMagick: true});
 const os = require('os');
+const UUID = require('uuid-v4');
 
 
 
@@ -11,12 +12,13 @@ const os = require('os');
  * top {int} - distance in px from the top to write the name
  */
 function writeNameToCert(sourceImagePath, name, coor) {
-    const fname = generateFilename(name);
+    const fname = generateFilename();
     return new Promise(function(resolve, reject) {
-        gm(sourceImagePath).fontSize(110).font('./Roboto-Regular.ttf').
+        gm(sourceImagePath).fontSize(70).font('./Roboto-Regular.ttf').
             drawText(coor.x, coor.y, name, 'Center').
             write(fname, (err) => {
                 if (err) {
+                    console.log(err, 'error');
                     reject(err);
                 } else {
                     resolve(fname);
@@ -25,10 +27,9 @@ function writeNameToCert(sourceImagePath, name, coor) {
     });
 }
 
-function generateFilename(name) {
-    name = name.replace(/\s/g, "");
-    var filename = (Math.floor(Math.random() * 100000000) + 1).toString(16);
-    return `${os.tmpdir()}/${name}${filename}.jpg`;
+function generateFilename() {
+    let token = UUID();
+    return `${os.tmpdir()}/${token}.jpg`;
 }
 
 

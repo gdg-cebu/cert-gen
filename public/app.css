@@ -1,0 +1,68 @@
+body {
+    box-sizing: border-box;
+    background: #000000;
+}
+.hidden {
+    display: none !important;
+}
+
+.logo {
+    width: 500px;
+    display: block;
+    margin: 0 auto;
+    max-width: 98%;
+}
+
+.loading {
+    width: 50px;
+}
+
+.error {
+    color: red;
+    font-family: arial;
+    text-align: center;
+}
+
+.form-center {
+    margin-top: 30vh;
+}
+
+form {
+    display: block;
+    width: 400px;
+    max-width: 99%;
+    margin: 0 auto;
+    transition: margin 300ms;
+}
+
+
+input {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    font-family: Arial;
+    font-size: 15px;
+    border-radius: 3px;
+    border: 1px solid #333;
+    box-sizing: border-box;
+}
+
+button {
+    display: block;
+    width: 100%;
+    border-radius: 3px;
+    border: 1px solid #333;
+    padding: 10px;
+    font-family: Arial;
+    font-size: 15px;
+    margin-top: 20px;
+    background: #3f51b5;
+    color: white;
+}
+
+#cert {
+    display: block;
+    max-width: 98%;
+    margin: 0 auto;
+    margin-top: 20px;
+}

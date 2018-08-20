@@ -4,10 +4,27 @@ const admin = require('firebase-admin');
 
 const fs = require('fs');
 const generateImage = require('./generate-image.js');
+var data = require('./result.json')
 
 admin.initializeApp({
     credential: admin.credential.applicationDefault()
 });
+
+// load data from participants json
+// exports.loadData = functions.https.onRequest((request, response) => {
+//     ref = admin.firestore().collection('participants-io')
+//     ctr = 0;
+//     for (var key in data) {
+//         ref.doc(key).set(data[key]).then((res) => {
+//             ctr += 1;
+//             if (ctr == 234) {
+//                 response.send('hello');
+//             }
+//         }).catch((err) => {
+//             response.send(err);
+//         })
+//     }
+// });
 
 
 exports.generateCert = functions.https.onRequest((request, response) => {
@@ -24,7 +41,8 @@ exports.generateCert = functions.https.onRequest((request, response) => {
               'Access-Control-Allow-Origin': '*'
             }).send(data.imageUrl);
         } else {
-            generateImage.writeNameToCert('cert.jpg', data.name, {x: 0, y: -50}).then((fname) => {
+            filename = data.event + '.jpg'
+            generateImage.writeNameToCert(filename, data.name, {x: 0, y: -30}).then((fname) => {
                 uploadImage(fname).then((url) => {
                     data.imageUrl = url;
                     doc.ref.set(data);
@@ -33,6 +51,7 @@ exports.generateCert = functions.https.onRequest((request, response) => {
                       'Access-Control-Allow-Origin': '*'
                     }).send(url);
                 }).catch((err) => {
+                    console.log(err, 'error 2');
                     response.status(400).send(err);
                 });
             }).catch((err) => {

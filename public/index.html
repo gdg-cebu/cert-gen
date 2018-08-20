@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>IO Extended 2018 Certificates</title>
+    <title>GDG Cebu IO Extended 2018 Certificates</title>
 
     <!-- update the version number as needed -->
     <script defer src="/__/firebase/5.3.1/firebase-app.js"></script>
@@ -12,50 +12,23 @@
     <!-- initialize the SDK after all desired features are loaded -->
     <script defer src="/__/firebase/init.js"></script>
     <link rel="stylesheet" href="/app.css">
+    <meta name="Description" content="GDG Cebu IO Extended 2018 Certificates" />
+    <meta name="keywords" content="GDG Cebu, IO Extended, 2018, Certificates" >
+    <meta name="author" content="Emmanuel Lodovice">
+    <meta property="og:title" content="GDG Cebu IO Extended 2018 Certificates">
+    <meta property="og:description" content="GDG Cebu IO Extended 2018 Certificates">
+    <meta property="og:image" content="https://gdg-cebu-cert-gen.firebaseapp.com/logo.png">
   </head>
   <body>
-    <form>
-      <label for="email">Email</label>
-      <input type="email" id="email">
+    <form class="form-center" id="form">
+      <img src="/logo.png" alt="logo" class="logo">
+      <p class="error hidden" id="error">Email not found.</p>
+      <input type="email" id="email" placeholder="Email">
       <button>Get Certificate</button>
     </form>
 
-    <img src="/loading.gif" alt="" id="cert">
+    <img src="" alt="" id="cert">
 
-    <script>
-      var genCertUrl = 'https://us-central1-gdg-cebu-cert-gen.cloudfunctions.net/generateCert?id=';
-      function setCertImage(imageUrl) {
-        if (!imageUrl) {
-          imageUrl = '/loading.gif'
-        }
-        document.querySelector('#cert').setAttribute('src', imageUrl);
-      }
-      document.addEventListener('DOMContentLoaded', function() {
-        var db = firebase.firestore();
-        const settings = {timestampsInSnapshots: true};
-        db.settings(settings);
-        document.querySelector('form').addEventListener('submit', function(e) {
-          e.preventDefault();
-          var emailAd = document.querySelector('#email').value;
-          db.collection('participants-io').
-            where('email', '==', emailAd).get().then(snapshot => {
-              if (snapshot.docs.length === 0) {
-                console.log('no user');
-                return;
-              }
-              var data = snapshot.docs[0].data();
-              var id = snapshot.docs[0].id;
-              if (data.imageUrl) {
-                setCertImage(data.imageUrl);
-              } else {
-                var req = new Request(genCertUrl += id);
-                fetch(req).then(resp => {
-                  resp.text().then(setCertImage);
-                });
-              }
-            });
-        });
-      });
-    </script>
+    <script src="/script.js"></script>
   </body>
 </html>
